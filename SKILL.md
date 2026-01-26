@@ -1,6 +1,6 @@
 ---
 name: data-loader-vue3
-description: A Vue 3 component for handling asynchronous data loading, error states, and automatic reloading. Use this skill when implementing data fetching logic in Vue components to ensure consistent loading/error UI and state management.
+description: Invoke this skill when the user mentions "/use loader", "DataLoader", "data loading", "async data", "loading state", or "error handling" in Vue components. It provides the standard implementation guidelines for the DataLoader component.
 ---
 
 # DataLoader Component Skill
