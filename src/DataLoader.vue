@@ -42,13 +42,10 @@ provide('reload', setLoaded)
 </script>
 
 <template>
-    <a-alert
-        v-if="error"
-        :description="error"
-        message="数据加载出错了"
-        show-icon
-        type="error"
-    />
+    <div v-if="error">
+        数据加载出错了
+        <pre>{{ error }}</pre>
+    </div>
     <slot v-else :data="data" :loaded="dataLoaded" :reload="setLoaded" :filtered-data="filteredData"/>
 </template>
 
