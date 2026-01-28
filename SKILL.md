@@ -35,17 +35,16 @@ import DataLoader from 'data-loader-vue3/src/DataLoader.vue';
     :load-data="fetchData"
     :load-data-args="queryParams"
     :filter="dataFilter"
+    #="{ filteredData, reload, data }"
   >
-    <template #default="{ filteredData, reload }">
-      <div v-if="!filteredData">Loading...</div>
-      <div v-else>
-        <!-- 使用数据 -->
-        <div v-for="item in filteredData" :key="item.id">
+    <div v-if="!filteredData">Loading...</div>
+    <div v-else>
+      <!-- 使用数据 -->
+      <div v-for="item in filteredData" :key="item.id">
           {{ item.name }}
-        </div>
-        <button @click="reload(false)">重新加载</button>
       </div>
-    </template>
+      <button @click="reload(false)">重新加载</button>
+    </div>
   </DataLoader>
 </template>
 
@@ -127,12 +126,10 @@ const fetchData = async (args) => await api.get(args);
 
 <template>
   <!-- hash 变化自动触发重新加载 -->
-  <DataLoader :hash="params" :load-data="fetchData" :load-data-args="params">
-    <template #default="{ data }">
-      <ul>
-        <li v-for="item in data" :key="item.id">{{ item.name }}</li>
-      </ul>
-    </template>
+  <DataLoader :hash="params" :load-data="fetchData" :load-data-args="params" #="{ data }">
+    <ul>
+      <li v-for="item in data" :key="item.id">{{ item.name }}</li>
+    </ul>
   </DataLoader>
 </template>
 ```
