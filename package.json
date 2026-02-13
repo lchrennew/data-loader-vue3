@@ -1,7 +1,15 @@
 {
   "name": "data-loader-vue3",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./src/index.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
