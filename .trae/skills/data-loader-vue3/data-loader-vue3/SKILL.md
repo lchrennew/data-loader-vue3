@@ -23,7 +23,7 @@ description: 指导用户正确安装和使用 DataLoader.vue 组件。当用户
 #### 引入组件
 
 ```vue
-import DataLoader from 'data-loader-vue3';
+import DataLoader from 'data-loader-vue3/src/DataLoader.vue';
 ```
 
 #### 基本使用
@@ -50,7 +50,7 @@ import DataLoader from 'data-loader-vue3';
 
 <script setup>
 import { ref } from 'vue';
-import DataLoader from 'data-loader-vue3';
+import DataLoader from 'data-loader-vue3/src/DataLoader.vue';
 
 const queryParams = ref({ page: 1 });
 
@@ -116,7 +116,7 @@ watch(params, fetchData, { deep: true });
 ```vue
 <script setup>
 import { ref } from 'vue';
-import DataLoader from 'data-loader-vue3';
+import DataLoader from 'data-loader-vue3/src/DataLoader.vue';
 
 const params = ref({ id: 1 });
 
@@ -150,27 +150,21 @@ const fetchData = async (args) => await api.get(args);
 | `loadData` | Function | **是** | - | 异步加载函数，需返回 Promise |
 | `loadDataArgs` | Any | 否 | `undefined` | 传给 loadData 的参数 |
 | `filter` | Function | 否 | `undefined` | 数据过滤器函数 |
-| `reloaderName` | String | 否 | `'reload'` | 注入（Provide）给子组件的重载函数名称 |
+| `loaded` | Any | 否 | `undefined` | 外部控制的加载状态 |
+| `reload` | Function | 否 | `undefined` | 外部控制的重载函数 |
 
 ### Events
 
 - `loaded(data, hash, filteredData)`: 数据加载成功时触发
-
-### Dependency Injection
-
-组件通过 `provide` 向下提供重载函数，子组件可以通过 `inject(reloaderName)` 获取。
-
-- Default Key: `'reload'`
-- Value: `(loaded: any) => void` (同 slot 中的 reload 函数)
 
 ### Slots (Default)
 
 默认插槽提供以下属性（Scoped Props）：
 
 - `data`: 原始数据
-- `filtered-data`: 经过 `filter` 处理后的数据（如果没有 filter 则等于 data）
-- `loaded`: 当前数据是否匹配 hash (Boolean)
-- `reload($loaded: any)`: 重新加载/设置状态函数。调用 `reload(false)` 可强制刷新。
+- `filteredData`: 经过 `filter` 处理后的数据（如果没有 filter 则等于 data）
+- `loaded`: 当前数据是否匹配 hash
+- `reload(force: boolean | hash)`: 重新加载函数
 
 ## 注意事项
 

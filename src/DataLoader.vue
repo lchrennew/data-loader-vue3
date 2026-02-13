@@ -2,15 +2,14 @@
 import { computed, nextTick, onBeforeUnmount, provide, ref } from 'vue'
 
 const props = defineProps({
-    hash: { required: true },
+    hash: { required: true, type: [String, Boolean] },
     loadDataArgs: { required: false },
-    loadData: { required: true },
-    loaded: { required: false, },
-    reload: { required: false, },
-    filter: { required: false, type: Function }
+    loadData: { required: true, type: Function },
+    filter: { required: false, type: Function },
+    reloaderName: { type: String, default: 'reload' }
 })
 
-const emit = defineEmits([ 'loaded' ])
+const emit = defineEmits(['loaded'])
 
 const loaded = ref(false)
 const data = ref(null)
@@ -18,7 +17,7 @@ const filteredData = computed(() => props.filter?.(data.value) ?? data.value)
 const error = ref(false)
 
 const dataLoaded = computed(() => {
-    const result = (props.loaded ?? loaded.value) === props.hash
+    const result = loaded.value === props.hash
     !result && nextTick(loadData)
     return result
 })
@@ -33,12 +32,12 @@ const loadData = async () => {
     }
 }
 
-const setLoaded = ($loaded = false) => props.reload ? props.reload($loaded) : (loaded.value = $loaded)
+const setLoaded = ($loaded = false) => loaded.value = $loaded
 
 setLoaded(false)
 onBeforeUnmount(() => setLoaded(false))
 
-provide('reload', setLoaded)
+provide(props.reloaderName, setLoaded)
 </script>
 
 <template>
@@ -46,9 +45,7 @@ provide('reload', setLoaded)
         数据加载出错了
         <pre>{{ error }}</pre>
     </div>
-    <slot v-else :data="data" :loaded="dataLoaded" :reload="setLoaded" :filtered-data="filteredData"/>
+    <slot v-else :data="data" :loaded="dataLoaded" :reload="setLoaded" :filtered-data="filteredData" />
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>
