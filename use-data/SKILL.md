@@ -1,6 +1,6 @@
 ---
 name: use-data
-description: Use this skill when editing this Vue 3 project and the user wants a page or block to load data automatically, refresh after query or mutation changes, or expose fetched data through scoped slots or injected reload handlers with `DataLoader`, even if they do not mention `DataLoader` by name.
+description: Use this skill when editing this Vue 3 project and the user wants a page or block to load data automatically, refresh when filters, tabs, pagination, or mutations change, or let a child component trigger a reload through this project's `DataLoader`, even if they do not mention `DataLoader` by name.
 ---
 
 # use-data
