@@ -1,37 +1,44 @@
 ---
 name: use-data
-description: Use this skill when editing this Vue 3 project and the task needs automatic data loading or reload behavior with the `DataLoader` component, including `hash`-driven refresh, scoped-slot rendering, `loaded` callbacks, and injected reload handlers.
+description: Use this skill when editing this Vue 3 project and the user wants a page or block to load data automatically, refresh after query or mutation changes, or expose fetched data through scoped slots or injected reload handlers with `DataLoader`, even if they do not mention `DataLoader` by name.
 ---
 
 # use-data
 
-Use this skill only when data loading in this project should go through `DataLoader` rather than custom `onMounted`, `watch`, or duplicate fetch state.
+Use this skill only for this project's `DataLoader` workflow. Follow the behavior implemented in `src/DataLoader.vue`, not generic Vue fetching patterns.
 
 ## When to use
 
-- Add automatic async data loading to a page, view, or child component.
-- Replace manual fetch or refresh logic with `DataLoader`.
-- Add reload behavior after search, save, delete, filter, tab, or page change.
-- Expose loaded data through scoped slots.
-- Trigger reload from descendants with `inject`.
-- Handle post-load callbacks through the `loaded` event.
+- Add or refactor async data loading so a page or block uses `DataLoader`.
+- Replace `onMounted`, `watch`, or local refresh code that fetches the same request.
+- Reload after query, tab, pagination, save, delete, filter, or status changes.
+- Render fetched results from the default scoped slot.
+- Trigger refresh from descendants with `inject`.
+- React to successful loads through the `loaded` event.
 
-Read [REFERENCE.md](references/REFERENCE.md) only if you need prop contracts, slot details, example code, or gotchas.
+Read [REFERENCE.md](references/REFERENCE.md) only when you need the prop contract, slot shape, or a code example.
 
-## Default approach
+## Default workflow
 
 1. Read the target component and identify which inputs should trigger a reload.
-2. Move the fetch into a `loadData` function and pass request params as one `loadDataArgs` object.
+2. Move the fetch into one `loadData` function and pass request params as one `loadDataArgs` object.
 3. Build a stable `hash` from every input that should invalidate the current result.
 4. Render from slot props: `data`, `filtered-data`, `loaded`, and `reload`.
-5. Reuse slot `reload()` or an injected reloader instead of adding a second fetch lifecycle.
+5. Use slot `reload()` by default; use `inject` only when a descendant must trigger refresh.
 6. Use `filter` only for derived display data, not as a replacement for raw `data`.
-7. Verify the chosen `hash` changes whenever the effective query changes.
+7. Validate that the chosen `hash` changes whenever the effective query changes.
 
-## Rules
+## Gotchas
 
 - Prefer truthy string `hash` values; avoid `hash=false` because internal `loaded` also starts as `false`.
 - `loadDataArgs` is forwarded as a single argument to `loadData`.
-- `loaded` means internal state matches the current `hash`, not merely that a request once completed.
+- `filter` changes `filtered-data`, not the raw `data` slot prop.
+- `loaded` means internal state matches the current `hash`, not merely that a request once finished.
 - If the parent customizes `reloaderName`, descendants must inject that exact name.
-- Avoid parallel fetching in `onMounted`, `watch`, or local refresh handlers when `DataLoader` owns the request.
+- Keep one fetch lifecycle. Do not combine `DataLoader` with parallel `onMounted`, `watch`, or local refresh requests for the same data.
+
+## Validation
+
+- Confirm `hash` covers every query input that should trigger reload.
+- Confirm reload uses slot `reload()` or the injected reloader instead of a duplicate request path.
+- Confirm templates read from slot props instead of a parallel copy of the same server state.
